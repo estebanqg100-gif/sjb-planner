@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Organizador UPSJB</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+:root {
+  --bg: #fdf4f2;
+  --card: #ffffff;
+  --card-soft: #fdeceb;
+  --border: #f2d9d6;
+  --rose-100: #fbe1df;
+  --rose-300: #f0a8ab;
+  --rose-500: #e2727a;
+  --rose-600: #c95863;
+  --rose-700: #a8434d;
+  --text: #46323a;
+  --text-dim: #8a6d72;
+  --text-faint: #bb9a9d;
+  --danger: #d64550;
+  --warn: #c98a2e;
+  --ok: #5f9d6f;
+
+  --c-realidad: #c8703a;
+  --c-filosofia: #8a4f7c;
+  --c-comunicacion: #5f8a3f;
+  --c-ingles: #b8862a;
+  --c-quimica: #1f8f79;
+  --c-fisica: #6b4fa8;
+  --c-calculo: #3f74a8;
+}
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; font-family: 'Inter', sans-serif; }
+.hand { font-family: 'Kalam', cursive; }
+.faint { color: var(--text-faint); font-size: 12.5px; }
+.dim { color: var(--text-dim); }
+button { font-family: 'Inter', sans-serif; }
+
+/* ---------- Layout shells ---------- */
+.wrap { max-width: 900px; margin: 0 auto; padding: 20px 18px 60px; }
+.auth-wrap { max-width: 380px; margin: 0 auto; padding: 60px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+
+.brand { text-align: center; margin-bottom: 26px; }
+.brand .mark { font-family: 'Kalam', cursive; font-size: 34px; color: var(--rose-600); font-weight: 700; }
+.brand .sub { color: var(--text-dim); font-size: 13px; margin-top: 2px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 26px 24px;
+  box-shadow: 0 6px 20px rgba(190,110,110,0.08);
+}
+
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-dim); margin-bottom: 5px; }
+.field input, .field select {
+  width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px;
+  font-size: 14.5px; background: #fffaf9; color: var(--text); font-family: 'Inter', sans-serif;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--rose-500); }
+
+.btn {
+  width: 100%; padding: 11px; border: none; border-radius: 10px; background: var(--rose-500);
+  color: #fff; font-weight: 700; font-size: 14.5px; cursor: pointer; transition: background .15s;
+}
+.btn:hover { background: var(--rose-600); }
+.btn.secondary { background: var(--card-soft); color: var(--rose-700); }
+.btn.secondary:hover { background: var(--rose-100); }
+.btn.small { width: auto; padding: 8px 14px; font-size: 13px; }
+.btn.ghost { background: none; color: var(--rose-600); text-decoration: underline; padding: 4px 0; font-size: 13px; font-weight: 600; }
+
+.link-row { text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-dim); }
+.error-box { background: #fbe4e4; color: var(--danger); border: 1px solid #f3c6c6; border-radius: 8px; padding: 9px 12px; font-size: 13px; margin-bottom: 12px; }
+.ok-box { background: #eaf4ec; color: var(--ok); border: 1px solid #cfe6d4; border-radius: 8px; padding: 9px 12px; font-size: 13px; margin-bottom: 12px; }
+
+/* ---------- App header ---------- */
+.app-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.app-title { font-size: 19px; font-weight: 700; }
+.app-title .hand { font-size: 24px; }
+.app-sub { color: var(--text-dim); font-size: 12.5px; }
+.user-chip { display: flex; align-items: center; gap: 10px; }
+.user-chip .name { font-size: 13px; font-weight: 600; background: var(--card-soft); color: var(--rose-700); padding: 6px 12px; border-radius: 999px; }
+.logout-btn { background: none; border: 1px solid var(--border); color: var(--text-dim); padding: 6px 12px; border-radius: 999px; font-size: 12.5px; cursor: pointer; }
+
+.tabs { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 4px; margin-bottom: 16px; width: fit-content; }
+.tab { border: none; background: transparent; color: var(--text-dim); font-size: 13.5px; font-weight: 600; padding: 8px 16px; border-radius: 9px; cursor: pointer; }
+.tab.active { background: var(--rose-500); color: #fff; }
+
+.panel { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin-bottom: 16px; }
+.panel h3 { font-size: 14px; color: var(--rose-700); margin-bottom: 12px; }
+
+/* ---------- Hero ---------- */
+.hero { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+.hero-num { font-family: 'Kalam', cursive; font-size: 50px; font-weight: 700; line-height: 1; color: var(--rose-600); }
+.hero-num.urgent { color: var(--danger); }
+.hero-num.soon { color: var(--warn); }
+.hero-num.ok { color: var(--ok); }
+.hero-tag { font-size: 13px; color: var(--text-dim); }
+.hero-title { font-size: 16.5px; font-weight: 700; }
+.hero-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 7px; }
+
+/* ---------- Legend ---------- */
+.legend { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: flex; align-items: center; gap: 6px; border: 1.5px solid var(--border); background: #fffaf9; color: var(--text-dim); font-size: 12.5px; font-weight: 600; padding: 5px 12px 5px 8px; border-radius: 999px; cursor: pointer; }
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; }
+.chip.active { border-color: currentColor; color: var(--text); background: var(--card-soft); }
+
+/* ---------- Schedule grid ---------- */
+.grid-wrap { overflow-x: auto; margin-top: 10px; }
+.grid { display: grid; grid-template-columns: 52px repeat(5, 1fr); min-width: 560px; }
+.grid-head { font-size: 12px; font-weight: 700; color: var(--rose-700); text-align: center; padding: 6px 2px; border-bottom: 1.5px solid var(--border); }
+.hourlbl { font-size: 10px; color: var(--text-faint); }
+.gridcol { position: relative; border-left: 1px solid var(--border); }
+.block { position: absolute; left: 2px; right: 2px; border-radius: 7px; border: 1.5px solid; padding: 3px 6px; overflow: hidden; background: #fff; }
+.block .t1 { font-size: 11px; font-weight: 700; }
+.block .t2 { font-size: 9.5px; opacity: .8; }
+
+/* ---------- Timeline ---------- */
+.timeline { display: flex; flex-direction: column; gap: 8px; }
+.ev { display: grid; grid-template-columns: 54px 1fr auto; align-items: center; gap: 12px; background: #fffaf9; border: 1px solid var(--border); border-left: 4px solid; border-radius: 10px; padding: 10px 12px; }
+.ev.done { opacity: .45; }
+.ev.conditional { border-style: dashed; }
+.ev-date { text-align: center; }
+.ev-date .d { font-family: 'Kalam', cursive; font-size: 18px; font-weight: 700; }
+.ev-date .m { font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
+.ev-title { font-size: 14px; font-weight: 700; }
+.ev-sub { font-size: 12px; color: var(--text-dim); margin-top: 1px; }
+.badge { font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.badge.urgent { background: #fbe1e1; color: #c23c46; }
+.badge.soon { background: #f8e8cf; color: #a3701f; }
+.badge.ok { background: #e3f0e5; color: #4a8558; }
+.badge.active { background: var(--card-soft); color: var(--rose-700); }
+.check { width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid var(--border); background: #fff; cursor: pointer; color: var(--ok); display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.check.on { background: #e3f0e5; border-color: var(--ok); }
+.toggle-past { background: none; border: none; color: var(--text-dim); font-size: 12.5px; cursor: pointer; text-decoration: underline; padding: 6px 0; }
+
+/* ---------- Tasks ---------- */
+.task-form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.task-form input[type=text], .task-form input[type=date], .task-form select {
+  background: #fffaf9; border: 1.5px solid var(--border); color: var(--text); border-radius: 9px; padding: 9px 11px; font-size: 13.5px; font-family: 'Inter', sans-serif;
+}
+.task-form input[type=text] { flex: 1; min-width: 180px; }
+.task-item { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 10px; background: #fffaf9; border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; margin-bottom: 7px; }
+.task-item.done .task-text { text-decoration: line-through; color: var(--text-faint); }
+.task-text { font-size: 13.5px; }
+.task-meta { font-size: 11.5px; color: var(--text-dim); }
+.task-del { background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: 16px; }
+.task-del:hover { color: var(--danger); }
+.empty { color: var(--text-faint); font-size: 13px; text-align: center; padding: 26px 10px; }
+
+/* ---------- Admin ---------- */
+.admin-block { margin-bottom: 20px; }
+.code-display { font-family: 'Kalam', cursive; font-size: 26px; font-weight: 700; color: var(--rose-700); background: var(--card-soft); border: 1.5px dashed var(--rose-300); border-radius: 10px; padding: 10px 16px; display: inline-block; margin-top: 8px; letter-spacing: 2px; }
+table.admin-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+table.admin-table th { text-align: left; color: var(--text-dim); font-size: 11.5px; padding: 6px 8px; border-bottom: 1.5px solid var(--border); }
+table.admin-table td { padding: 7px 8px; border-bottom: 1px solid var(--border); }
+.inline-form { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; }
+
+@media (max-width: 520px) {
+  .hero-num { font-size: 38px; }
+  .ev { grid-template-columns: 42px 1fr auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== AUTH SCREENS ===================== -->
+<div id="screen-login" class="auth-wrap">
+  <div class="brand">
+    <div class="mark">SJB Planner</div>
+    <div class="sub">Tu ciclo, a la vista</div>
+  </div>
+  <div class="card">
+    <div id="login-error"></div>
+    <div class="field"><label>Usuario</label><input type="text" id="login-user" /></div>
+    <div class="field"><label>Contraseña</label><input type="password" id="login-pass" /></div>
+    <button class="btn" id="login-submit">Entrar</button>
+    <div class="link-row">
+      <button class="btn ghost" data-go="register">¿Tienes un código de invitación? Regístrate</button><br/>
+      <button class="btn ghost" data-go="reset">¿Olvidaste tu contraseña?</button>
+    </div>
+  </div>
+</div>
+
+<div id="screen-register" class="auth-wrap" style="display:none;">
+  <div class="brand"><div class="mark">SJB Planner</div><div class="sub">Crea tu cuenta</div></div>
+  <div class="card">
+    <div id="register-error"></div>
+    <div class="field"><label>Código de invitación</label><input type="text" id="reg-code" placeholder="Te lo pasa el admin" /></div>
+    <div class="field"><label>Elige un usuario</label><input type="text" id="reg-user" /></div>
+    <div class="field"><label>Elige una contraseña</label><input type="password" id="reg-pass" /></div>
+    <button class="btn" id="register-submit">Crear cuenta</button>
+    <div class="link-row"><button class="btn ghost" data-go="login">Ya tengo cuenta, entrar</button></div>
+  </div>
+</div>
+
+<div id="screen-reset" class="auth-wrap" style="display:none;">
+  <div class="brand"><div class="mark">SJB Planner</div><div class="sub">Nueva contraseña</div></div>
+  <div class="card">
+    <p class="faint" style="margin-bottom:14px;">Pídele al admin un código de restablecimiento, y pon aquí tu contraseña nueva.</p>
+    <div id="reset-error"></div>
+    <div class="field"><label>Usuario</label><input type="text" id="reset-user" /></div>
+    <div class="field"><label>Código que te dio el admin</label><input type="text" id="reset-code" /></div>
+    <div class="field"><label>Contraseña nueva</label><input type="password" id="reset-pass" /></div>
+    <button class="btn" id="reset-submit">Cambiar contraseña</button>
+    <div class="link-row"><button class="btn ghost" data-go="login">Volver a entrar</button></div>
+  </div>
+</div>
+
+<!-- ===================== MAIN APP ===================== -->
+<div id="screen-app" style="display:none;">
+  <div class="wrap">
+    <div class="app-top">
+      <div>
+        <div class="app-title"><span class="hand">SJB Planner</span></div>
+        <div class="app-sub">Ciclo 2026-II · 24 ago – 12 dic</div>
+      </div>
+      <div class="user-chip">
+        <span class="name" id="user-name-chip"></span>
+        <button class="logout-btn" id="logout-btn">Salir</button>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-view="semestre">Semestre</button>
+      <button class="tab" data-view="pendientes">Mis pendientes</button>
+      <button class="tab" data-view="admin" id="tab-admin" style="display:none;">Admin</button>
+    </div>
+
+    <div id="view-semestre">
+      <div class="panel" id="hero-panel"></div>
+      <div class="panel">
+        <h3>Horario semanal</h3>
+        <div class="grid-wrap"><div class="grid" id="schedule-grid"></div></div>
+      </div>
+      <div class="panel">
+        <h3>Evaluaciones por curso</h3>
+        <div class="legend" id="legend"></div>
+        <div class="timeline" id="timeline" style="margin-top:16px;"></div>
+        <button class="toggle-past" id="toggle-past">Ver evaluaciones pasadas</button>
+        <p class="faint" style="margin-top:10px;">Cronograma general de Estudios Generales: mismas semanas para los 7 cursos, cada fecha cae en el día real de tu clase esa semana.</p>
+      </div>
+    </div>
+
+    <div id="view-pendientes" style="display:none;">
+      <div class="panel">
+        <h3>Agregar pendiente</h3>
+        <div class="task-form">
+          <input type="text" id="task-text" placeholder="¿Qué tienes pendiente?" />
+          <select id="task-course"></select>
+          <input type="date" id="task-date" />
+          <button class="btn small" id="task-add">Añadir</button>
+        </div>
+        <div id="task-list"></div>
+      </div>
+    </div>
+
+    <div id="view-admin" style="display:none;">
+      <div class="panel admin-block">
+        <h3>Generar código de invitación</h3>
+        <button class="btn small" id="gen-invite">Generar código</button>
+        <div id="invite-result"></div>
+      </div>
+      <div class="panel admin-block">
+        <h3>Generar código de restablecimiento</h3>
+        <div class="inline-form">
+          <input type="text" id="reset-target-user" placeholder="usuario" style="padding:9px 11px;border:1.5px solid var(--border);border-radius:9px;" />
+          <button class="btn small" id="gen-reset">Generar código</button>
+        </div>
+        <div id="reset-result"></div>
+      </div>
+      <div class="panel admin-block">
+        <h3>Usuarios registrados</h3>
+        <div id="admin-users"></div>
+      </div>
+      <div class="panel admin-block">
+        <h3>Códigos de invitación emitidos</h3>
+        <div id="admin-codes"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const COURSES = {
+    realidad:      { name: 'Realidad Nacional e Internacional', short: 'Realidad',    color: 'var(--c-realidad)' },
+    filosofia:     { name: 'Filosofía',                          short: 'Filosofía',   color: 'var(--c-filosofia)' },
+    comunicacion:  { name: 'Comunicación',                       short: 'Comunic.',    color: 'var(--c-comunicacion)' },
+    ingles:        { name: 'Inglés I',                           short: 'Inglés I',    color: 'var(--c-ingles)' },
+    quimica:       { name: 'Química',                            short: 'Química',     color: 'var(--c-quimica)' },
+    fisica:        { name: 'Física I',                           short: 'Física I',    color: 'var(--c-fisica)' },
+    calculo:       { name: 'Cálculo',                             short: 'Cálculo',     color: 'var(--c-calculo)' },
+  };
+
+  const DAY_NAMES = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
+  const SCHEDULE = [
+    { course:'realidad',     day:0, type:'Teoría',   start:'13:55', end:'15:30', place:'Virtual 3' },
+    { course:'realidad',     day:0, type:'Práctica', start:'15:30', end:'17:00', place:'Virtual 3' },
+    { course:'ingles',       day:0, type:'Teoría',   start:'17:05', end:'18:35', place:'Virtual 2' },
+    { course:'ingles',       day:0, type:'Práctica', start:'18:35', end:'20:05', place:'Virtual 2' },
+    { course:'filosofia',    day:1, type:'Teoría',   start:'13:55', end:'15:30', place:'Virtual 3' },
+    { course:'filosofia',    day:1, type:'Práctica', start:'15:30', end:'17:00', place:'Virtual 3' },
+    { course:'quimica',      day:1, type:'Teoría',   start:'17:50', end:'19:20', place:'B-308' },
+    { course:'comunicacion', day:2, type:'Teoría',   start:'13:55', end:'15:30', place:'Virtual 2' },
+    { course:'comunicacion', day:2, type:'Práctica', start:'15:30', end:'17:00', place:'Virtual 2' },
+    { course:'fisica',       day:2, type:'Teoría',   start:'17:50', end:'19:20', place:'B-303' },
+    { course:'fisica',       day:2, type:'Práctica', start:'19:20', end:'22:25', place:'B-303' },
+    { course:'quimica',      day:3, type:'Lab',      start:'19:20', end:'20:55', place:'Lab N°10' },
+    { course:'calculo',      day:4, type:'Teoría',   start:'17:50', end:'19:20', place:'B-103' },
+    { course:'calculo',      day:4, type:'Práctica', start:'19:20', end:'22:25', place:'B-103' },
+  ];
+
+  const CRONOGRAMA = [
+    { code:'PC1',      label:'Práctica calificada 01', week:'Semana 04' },
+    { code:'PARCIAL',  label:'Examen parcial',         week:'Semana 08' },
+    { code:'PC2',      label:'Práctica calificada 02', week:'Semana 10' },
+    { code:'PC3',      label:'Práctica calificada 03', week:'Semana 12' },
+    { code:'PC4',      label:'Práctica calificada 04', week:'Semana 15' },
+    { code:'FINAL',    label:'Examen final',           week:'Semana 16' },
+  ];
+  const APLAZADO = { code:'APLAZADO', label:'Examen aplazado', week:'—', start:'2026-12-14', end:'2026-12-16', conditional:true };
+
+  const WEEK_MONDAY = { PC1:'2026-09-14', PARCIAL:'2026-10-12', PC2:'2026-10-26', PC3:'2026-11-09', PC4:'2026-11-30', FINAL:'2026-12-07' };
+  const COURSE_DAY = { realidad:0, filosofia:1, comunicacion:2, ingles:0, quimica:1, fisica:2, calculo:4 };
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function toISO(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+  function addDays(dateStr, n) { const d = parseDate(dateStr); d.setDate(d.getDate() + n); return toISO(d); }
+
+  const EVENTS = [];
+  Object.keys(COURSES).forEach(cid => {
+    CRONOGRAMA.forEach(c => {
+      const date = addDays(WEEK_MONDAY[c.code], COURSE_DAY[cid]);
+      EVENTS.push({ id: cid + '-' + c.code, course: cid, code: c.code, label: c.label, week: c.week, start: date, end: date });
+    });
+    EVENTS.push({ id: cid + '-' + APLAZADO.code, course: cid, code: APLAZADO.code, label: APLAZADO.label, week: APLAZADO.week, start: APLAZADO.start, end: APLAZADO.end, conditional: true });
+  });
+
+  const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const DOW = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  function todayMidnight() { const d = new Date(); d.setHours(0,0,0,0); return d; }
+  function parseDate(s) { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+  function daysBetween(a,b) { return Math.round((b-a)/86400000); }
+
+  function status(ev) {
+    const today = todayMidnight();
+    const start = parseDate(ev.start), end = parseDate(ev.end);
+    if (today > end) return { kind:'past' };
+    if (today >= start && today <= end) return { kind:'active' };
+    return { kind:'upcoming', days: daysBetween(today, start) };
+  }
+  function urgencyClass(st) {
+    if (st.kind === 'active') return 'active';
+    if (st.kind === 'upcoming' && st.days <= 3) return 'urgent';
+    if (st.kind === 'upcoming' && st.days <= 7) return 'soon';
+    return 'ok';
+  }
+  function formatDate(s) { const d = parseDate(s); return { d: d.getDate(), m: MESES[d.getMonth()] }; }
+  function formatRange(s1, s2) {
+    const a = parseDate(s1);
+    if (s1 === s2) return `${DOW[a.getDay()]} ${a.getDate()} ${MESES[a.getMonth()]}`;
+    const b = parseDate(s2);
+    return `${a.getDate()} ${MESES[a.getMonth()]} – ${b.getDate()} ${MESES[b.getMonth()]}`;
+  }
+  function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  // ---------------- Auth / API ----------------
+  const TOKEN_KEY = 'sjb_token';
+  function getToken() { return localStorage.getItem(TOKEN_KEY); }
+  function saveToken(t) { localStorage.setItem(TOKEN_KEY, t); }
+  function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+  function decodeToken(t) {
+    try {
+      const payload = t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+      return JSON.parse(decodeURIComponent(atob(payload).split('').map(c => '%' + c.charCodeAt(0).toString(16).padStart(2,'0')).join('')));
+    } catch { return null; }
+  }
+  async function api(path, method, body) {
+    const headers = { 'Content-Type': 'application/json' };
+    const token = getToken();
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    const res = await fetch(path, { method: method || 'GET', headers, body: body ? JSON.stringify(body) : undefined });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Error de conexión');
+    return data;
+  }
+
+  let currentUser = null;
+  let completed = {};
+  let pendientes = [];
+  let activeFilter = null;
+  let showPast = false;
+
+  function showScreen(id) {
+    ['screen-login','screen-register','screen-reset','screen-app'].forEach(s => {
+      document.getElementById(s).style.display = (s === id) ? '' : 'none';
+    });
+  }
+  function showError(boxId, msg) {
+    document.getElementById(boxId).innerHTML = msg ? `<div class="error-box">${escapeHtml(msg)}</div>` : '';
+  }
+
+  document.querySelectorAll('[data-go]').forEach(btn => {
+    btn.addEventListener('click', () => showScreen('screen-' + btn.getAttribute('data-go')));
+  });
+
+  document.getElementById('login-submit').addEventListener('click', async () => {
+    showError('login-error', '');
+    try {
+      const data = await api('/api/login', 'POST', {
+        username: document.getElementById('login-user').value.trim(),
+        password: document.getElementById('login-pass').value,
+      });
+      saveToken(data.token);
+      await bootApp();
+    } catch (e) { showError('login-error', e.message); }
+  });
+
+  document.getElementById('register-submit').addEventListener('click', async () => {
+    showError('register-error', '');
+    try {
+      const data = await api('/api/register', 'POST', {
+        username: document.getElementById('reg-user').value.trim(),
+        password: document.getElementById('reg-pass').value,
+        inviteCode: document.getElementById('reg-code').value.trim(),
+      });
+      saveToken(data.token);
+      await bootApp();
+    } catch (e) { showError('register-error', e.message); }
+  });
+
+  document.getElementById('reset-submit').addEventListener('click', async () => {
+    showError('reset-error', '');
+    try {
+      await api('/api/reset-password', 'POST', {
+        username: document.getElementById('reset-user').value.trim(),
+        resetCode: document.getElementById('reset-code').value.trim(),
+        newPassword: document.getElementById('reset-pass').value,
+      });
+      document.getElementById('reset-error').innerHTML = '<div class="ok-box">Contraseña cambiada. Ya puedes entrar.</div>';
+      setTimeout(() => showScreen('screen-login'), 1200);
+    } catch (e) { showError('reset-error', e.message); }
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    clearToken();
+    location.reload();
+  });
+
+  // ---------------- Tabs ----------------
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const view = tab.getAttribute('data-view');
+      document.getElementById('view-semestre').style.display = view === 'semestre' ? '' : 'none';
+      document.getElementById('view-pendientes').style.display = view === 'pendientes' ? '' : 'none';
+      document.getElementById('view-admin').style.display = view === 'admin' ? '' : 'none';
+      if (view === 'admin') loadAdminPanel();
+    });
+  });
+
+  // ---------------- Dashboard rendering (Semestre) ----------------
+  function renderHero() {
+    const upcoming = EVENTS.filter(e => !e.conditional).map(e => ({ e, st: status(e) })).filter(x => x.st.kind !== 'past').sort((a,b) => parseDate(a.e.start) - parseDate(b.e.start));
+    const panel = document.getElementById('hero-panel');
+    if (!upcoming.length) { panel.innerHTML = '<p class="faint">No quedan evaluaciones pendientes en el cronograma.</p>'; return; }
+    const next = upcoming[0];
+    const cls = urgencyClass(next.st);
+    const numText = next.st.kind === 'active' ? 'Hoy' : String(next.st.days);
+    const course = COURSES[next.e.course];
+    panel.innerHTML = `
+      <div class="hero">
+        <div class="hero-num ${cls}">${numText}</div>
+        <div>
+          <p class="hero-tag">${next.st.kind === 'active' ? 'En curso ahora' : 'días para tu próxima evaluación'}</p>
+          <p class="hero-title"><span class="hero-dot" style="background:${course.color}"></span>${next.e.label} · ${course.short}</p>
+          <p class="faint">${next.e.week} · ${formatRange(next.e.start, next.e.end)}</p>
+        </div>
+      </div>`;
+  }
+
+  function renderLegend() {
+    const el = document.getElementById('legend');
+    let html = `<button class="chip ${activeFilter===null?'active':''}" data-course="__all__"><span class="dot" style="background:var(--text-dim)"></span>Todos</button>`;
+    Object.entries(COURSES).forEach(([id,c]) => {
+      html += `<button class="chip ${activeFilter===id?'active':''}" data-course="${id}" style="${activeFilter===id?'color:'+c.color:''}"><span class="dot" style="background:${c.color}"></span>${c.short}</button>`;
+    });
+    el.innerHTML = html;
+    el.querySelectorAll('.chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cid = btn.getAttribute('data-course');
+        activeFilter = cid === '__all__' ? null : (activeFilter === cid ? null : cid);
+        renderLegend(); renderTimeline();
+      });
+    });
+  }
+
+  function renderTimeline() {
+    const el = document.getElementById('timeline');
+    let list = EVENTS.filter(e => !activeFilter || e.course === activeFilter).map(e => ({ e, st: status(e) }));
+    if (!showPast) list = list.filter(x => x.st.kind !== 'past');
+    list.sort((a,b) => parseDate(a.e.start) - parseDate(b.e.start));
+    if (!list.length) { el.innerHTML = '<p class="empty">No hay evaluaciones en este filtro.</p>'; return; }
+    el.innerHTML = list.map(({e, st}) => {
+      const course = COURSES[e.course];
+      const { d, m } = formatDate(e.start);
+      const isDone = !!completed[e.id];
+      const cls = st.kind === 'past' ? 'ok' : urgencyClass(st);
+      let badgeText = st.kind === 'past' ? 'Pasó' : st.kind === 'active' ? 'En curso' : (st.days === 0 ? 'Hoy' : `${st.days} d`);
+      return `
+        <div class="ev ${isDone?'done':''} ${e.conditional?'conditional':''}" style="border-left-color:${course.color}">
+          <div class="ev-date"><div class="d">${d}</div><div class="m">${m}</div></div>
+          <div>
+            <div class="ev-title">${e.label}${e.conditional ? ' <span class="faint">(condicional)</span>' : ''}</div>
+            <div class="ev-sub">${course.short} · ${e.week} · ${formatRange(e.start,e.end)}</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="badge ${cls}">${badgeText}</span>
+            <button class="check ${isDone?'on':''}" data-id="${e.id}">${isDone?'✓':''}</button>
+          </div>
+        </div>`;
+    }).join('');
+    el.querySelectorAll('.check').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        completed[btn.getAttribute('data-id')] = !completed[btn.getAttribute('data-id')];
+        await persistData();
+        renderTimeline(); renderHero();
+      });
+    });
+  }
+
+  function renderSchedule() {
+    const grid = document.getElementById('schedule-grid');
+    const startMin = 13*60+30, endMin = 22*60+30, totalMin = endMin - startMin, rowH = 3.6;
+    let html = `<div></div>`;
+    DAY_NAMES.forEach(d => html += `<div class="grid-head">${d}</div>`);
+    const gridHeight = totalMin * rowH;
+    html += `<div style="position:relative; height:${gridHeight}px;">`;
+    for (let h = 14; h <= 22; h++) {
+      const top = ((h*60) - startMin) * rowH;
+      html += `<div class="hourlbl" style="position:absolute; top:${top-6}px; right:6px; width:44px; text-align:right;">${h>12?h-12:h}:00 ${h<12?'am':'pm'}</div>`;
+    }
+    html += `</div>`;
+    for (let day = 0; day < 5; day++) {
+      html += `<div class="gridcol" style="height:${gridHeight}px;">`;
+      SCHEDULE.filter(s => s.day === day).forEach(s => {
+        const [sh, sm] = s.start.split(':').map(Number);
+        const [eh, em] = s.end.split(':').map(Number);
+        const top = ((sh*60+sm) - startMin) * rowH;
+        const height = ((eh*60+em) - (sh*60+sm)) * rowH;
+        const course = COURSES[s.course];
+        html += `<div class="block" style="top:${top}px; height:${height}px; border-color:${course.color};">
+          <div class="t1" style="color:${course.color}">${course.short}</div>
+          <div class="t2">${s.type} · ${s.start}–${s.end}</div>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+    grid.innerHTML = html;
+  }
+
+  // ---------------- Pendientes ----------------
+  function renderTaskCourseSelect() {
+    const sel = document.getElementById('task-course');
+    let html = '<option value="">Sin curso</option>';
+    Object.entries(COURSES).forEach(([id,c]) => html += `<option value="${id}">${c.short}</option>`);
+    sel.innerHTML = html;
+  }
+  function renderTasks() {
+    const el = document.getElementById('task-list');
+    if (!pendientes.length) { el.innerHTML = '<p class="empty">Aún no agregaste pendientes.</p>'; return; }
+    const sorted = [...pendientes].sort((a,b) => {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      if (!a.date && !b.date) return 0;
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return a.date.localeCompare(b.date);
+    });
+    el.innerHTML = sorted.map(t => {
+      const course = t.course ? COURSES[t.course] : null;
+      const dateLabel = t.date ? formatDate(t.date) : null;
+      const meta = [course ? course.short : null, dateLabel ? `${dateLabel.d} ${dateLabel.m}` : null].filter(Boolean).join(' · ');
+      return `
+        <div class="task-item ${t.done?'done':''}">
+          <button class="check ${t.done?'on':''}" data-id="${t.id}" data-action="toggle">${t.done?'✓':''}</button>
+          <div><div class="task-text">${escapeHtml(t.text)}</div>${meta ? `<div class="task-meta">${meta}</div>` : ''}</div>
+          <span></span>
+          <button class="task-del" data-id="${t.id}" data-action="delete">✕</button>
+        </div>`;
+    }).join('');
+    el.querySelectorAll('[data-action="toggle"]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const t = pendientes.find(x => x.id === btn.getAttribute('data-id'));
+        if (t) { t.done = !t.done; await persistData(); renderTasks(); }
+      });
+    });
+    el.querySelectorAll('[data-action="delete"]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        pendientes = pendientes.filter(x => x.id !== btn.getAttribute('data-id'));
+        await persistData(); renderTasks();
+      });
+    });
+  }
+  document.getElementById('task-add').addEventListener('click', async () => {
+    const textEl = document.getElementById('task-text');
+    const courseEl = document.getElementById('task-course');
+    const dateEl = document.getElementById('task-date');
+    const text = textEl.value.trim();
+    if (!text) { textEl.focus(); return; }
+    pendientes.push({ id: 'task-' + Date.now() + '-' + Math.random().toString(36).slice(2,7), text, course: courseEl.value || null, date: dateEl.value || null, done: false });
+    textEl.value = ''; dateEl.value = ''; courseEl.value = '';
+    await persistData(); renderTasks();
+  });
+  document.getElementById('task-text').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('task-add').click(); });
+
+  document.getElementById('toggle-past').addEventListener('click', () => {
+    showPast = !showPast;
+    document.getElementById('toggle-past').textContent = showPast ? 'Ocultar evaluaciones pasadas' : 'Ver evaluaciones pasadas';
+    renderTimeline();
+  });
+
+  async function persistData() {
+    try { await api('/api/me/data', 'PUT', { pendientes, completed }); }
+    catch (e) { console.error('No se pudo guardar', e); }
+  }
+
+  // ---------------- Admin ----------------
+  document.getElementById('gen-invite').addEventListener('click', async () => {
+    try {
+      const data = await api('/api/admin/invite-codes', 'POST');
+      document.getElementById('invite-result').innerHTML = `<div class="code-display">${data.code}</div>`;
+      loadAdminCodes();
+    } catch (e) { document.getElementById('invite-result').innerHTML = `<div class="error-box">${escapeHtml(e.message)}</div>`; }
+  });
+  document.getElementById('gen-reset').addEventListener('click', async () => {
+    const username = document.getElementById('reset-target-user').value.trim();
+    try {
+      const data = await api('/api/admin/reset-codes', 'POST', { username });
+      document.getElementById('reset-result').innerHTML = `<div class="code-display">${data.code}</div>`;
+    } catch (e) { document.getElementById('reset-result').innerHTML = `<div class="error-box">${escapeHtml(e.message)}</div>`; }
+  });
+
+  async function loadAdminUsers() {
+    try {
+      const users = await api('/api/admin/users', 'GET');
+      const el = document.getElementById('admin-users');
+      if (!users.length) { el.innerHTML = '<p class="empty">Aún no hay usuarios.</p>'; return; }
+      el.innerHTML = `<table class="admin-table"><tr><th>Usuario</th><th>Registrado</th></tr>${users.map(u => `<tr><td>${escapeHtml(u.username)}</td><td>${new Date(u.created_at).toLocaleDateString('es-PE')}</td></tr>`).join('')}</table>`;
+    } catch (e) { document.getElementById('admin-users').innerHTML = `<div class="error-box">${escapeHtml(e.message)}</div>`; }
+  }
+  async function loadAdminCodes() {
+    try {
+      const codes = await api('/api/admin/invite-codes', 'GET');
+      const el = document.getElementById('admin-codes');
+      if (!codes.length) { el.innerHTML = '<p class="empty">Todavía no generaste códigos.</p>'; return; }
+      el.innerHTML = `<table class="admin-table"><tr><th>Código</th><th>Usado por</th><th>Estado</th></tr>${codes.map(c => `<tr><td>${c.code}</td><td>${c.used_by ? escapeHtml(c.used_by) : '—'}</td><td>${c.used_at ? 'Usado' : 'Disponible'}</td></tr>`).join('')}</table>`;
+    } catch (e) { document.getElementById('admin-codes').innerHTML = `<div class="error-box">${escapeHtml(e.message)}</div>`; }
+  }
+  function loadAdminPanel() { loadAdminUsers(); loadAdminCodes(); }
+
+  // ---------------- Boot ----------------
+  async function bootApp() {
+    const token = getToken();
+    if (!token) { showScreen('screen-login'); return; }
+    const payload = decodeToken(token);
+    if (!payload) { clearToken(); showScreen('screen-login'); return; }
+    try {
+      const data = await api('/api/me/data', 'GET');
+      pendientes = data.pendientes || [];
+      completed = data.completed || {};
+      currentUser = payload;
+      document.getElementById('user-name-chip').textContent = payload.username;
+      document.getElementById('tab-admin').style.display = payload.isAdmin ? '' : 'none';
+      renderTaskCourseSelect();
+      renderSchedule(); renderLegend(); renderHero(); renderTimeline(); renderTasks();
+      showScreen('screen-app');
+    } catch (e) {
+      clearToken();
+      showScreen('screen-login');
+    }
+  }
+
+  bootApp();
+})();
+</script>
+</body>
+</html>
